@@ -1,0 +1,36 @@
+<html>
+  <head>
+  <title>My Now Amazing Webpage</title>
+  <link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/jquery.slick/1.6.0/slick-theme.css"/>
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+  </head>
+  <body bgcolor="black">
+
+  <div class="your-class image-responsive" >
+  	<div><img src="../media/img/Slide1.JPG"/></div>
+  	<div><img src="../media/img/Slide2.JPG"/></div>
+  	<div><img src="../media/img/Slide3.JPG"/></div>
+  	<div><img src="../media/img/Slide4.JPG"/></div>
+  </div>
+
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  <script type="text/javascript" src="http://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('.your-class').slick({
+        centerMode: true,
+        centerPadding: '40px',
+        dots: true,
+        mobileFirst: true
+      });
+    });
+
+  </script>
+
+  </body>
+</html>
