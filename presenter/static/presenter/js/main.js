@@ -10,11 +10,10 @@ request.send();
 function renderHTML(data){
 var htmlString = "";
 for (i = 1; i <= data.numberofslides; i++){
-
-	//htmlString += "<div><img src=\"../media/img/Slide" + i + ".JPG\"/></div>";
+	htmlString += "<div><img src=\"../media/img/Slide" + i + ".JPG\"/></div>";
 }
 
-//imagediv.insertAdjacentHTML('beforeend', htmlString);
+imagediv.insertAdjacentHTML('beforeend', htmlString);
 
 };
 
