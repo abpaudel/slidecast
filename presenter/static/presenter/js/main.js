@@ -7,6 +7,7 @@ var nxtprevdiv = document.getElementById('nxtprev');
 updateslide(1);
 var x = setInterval(updateslide, 5000)
 
+
 function updateslide(isnew){
 	var request = new XMLHttpRequest();
 	request.open('GET', 'http://'+ window.location.host + '/present/getdata/');
@@ -19,11 +20,18 @@ function updateslide(isnew){
 	
 }
 
-function autosync(element, x){
-	if (element.checked) {var x = setInterval(updateslide, 5000); element.checked = False;}
-	else { clearInterval(x); element.checked = True;}
+// function uncheck(){
+//   var chkbox= document.getElementById('chkbox');
+//   chkbox.checked = false;
+//   clearInterval(x);
 
-}
+// }
+
+// function autosync(element){
+// 	if (element.checked) {x = setInterval(updateslide, 5000); element.checked = false;}
+// 	else { clearInterval(x); element.checked = false;}
+
+// }
 
 function renderHTML(data){
 var htmlString1 = "";
@@ -64,3 +72,23 @@ function showDivs(n) {
   dots[slideIndex-1].className += " w3-red";
 }
 
+
+document.onkeydown = function(e) {
+    e = e || window.event;
+    switch(e.which || e.keyCode) {
+        case 37: // left
+          plusDivs(-1);
+          break;
+
+        case 38: // up
+          
+          break;
+        case 39: // right
+          plusDivs(1);
+          break;
+
+        case 40: // down
+          break;
+
+        default: return; // exit this handler for other keys
+    }}

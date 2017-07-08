@@ -72,3 +72,23 @@ function showDivs(n) {
   dots[slideIndex-1].className += " w3-red";
 }
 
+
+document.onkeydown = function(e) {
+    e = e || window.event;
+    switch(e.which || e.keyCode) {
+        case 37: // left
+          plusDivs(-1);
+          break;
+
+        case 38: // up
+          
+          break;
+        case 39: // right
+          plusDivs(1);
+          break;
+
+        case 40: // down
+          break;
+
+        default: return; // exit this handler for other keys
+    }}

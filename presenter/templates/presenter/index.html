@@ -7,8 +7,8 @@
 </style>
 <body>
 
-<div class="w3-container">
-  <h2>SlideCast</h2>
+<div class="w3-container w3-center">
+  <h2 >Powered by SlideCast</h2>
   </div>
 
 <div class="w3-content" id = "imagecontainer" style="max-width:80%">
@@ -16,14 +16,20 @@
 </div>
 
 <div class="w3-center">
-  <div class="w3-section" id = "nxtprev">
+  <div class="w3-section" id = "nxtprev" onclick="uncheck()">
     
   </div>
-  <div id = "slide-button">
-     <label class="switch">
-      <input type="checkbox" name = "sync" onchange="autosync(this, x)" checked>Auto-sync
+
+  <div>
+  	 <label class="switch">
+      <input id ="chkbox" type="checkbox" name = "sync" checked>Auto-sync
     <div class="slider"></div>
-</label>
+</label>	
+
+  </div>
+  
+  <div id = "slide-button" ">
+    
   </div>
 
 </div>
