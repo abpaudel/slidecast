@@ -4,26 +4,33 @@ var buttondiv = document.getElementById('slide-button');
 var nxtprevdiv = document.getElementById('nxtprev');
 
 
-updateslide(1);
-var x = setInterval(updateslide, 5000)
+getslide();
+
+function getslide(){
+  var request = new XMLHttpRequest();
+  request.open('GET', 'http://'+ window.location.host + '/present/getdata/');
+  request.onload = function getdata(){
+  var data = JSON.parse(request.responseText);
+  renderHTML(data);
+  showDivs(slideIndex = data.currentslide);
+  };
+  request.send();
+  
+}
+
 
 function updateslide(isnew){
+  var csrftoken = $.cookie('csrftoken');
 	var request = new XMLHttpRequest();
-	request.open('GET', 'http://'+ window.location.host + '/present/getdata/');
-	request.onload = function getdata(){
-	var data = JSON.parse(request.responseText);
-	if(isnew==1) {renderHTML(data);}
-	showDivs(slideIndex = data.currentslide);
-	};
-	request.send();
+	request.open('POST', 'http://'+ window.location.host + '/present/getdata/');
+  request.setRequestHeader("Content-Type", "application/json");
+  request.setRequestHeader("X-CSRFToken", csrftoken);
+  var str = {"currentslide": isnew };
+  request.send(JSON.stringify(str));
 	
 }
 
-function autosync(element, x){
-	if (element.checked) {var x = setInterval(updateslide, 5000); element.checked = False;}
-	else { clearInterval(x); element.checked = True;}
 
-}
 
 function renderHTML(data){
 var htmlString1 = "";
@@ -49,6 +56,7 @@ function currentDiv(n) {
 }
 
 function showDivs(n) {
+  updateslide(n);
   var i;
   var x = document.getElementsByClassName("mySlides");
   var dots = document.getElementsByClassName("demo");
