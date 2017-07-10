@@ -5,7 +5,7 @@ var nxtprevdiv = document.getElementById('nxtprev');
 
 
 updateslide(1);
-var x = setInterval(updateslide, 5000)
+var x = setInterval(updateslide, 2000)
 
 
 function updateslide(isnew){
