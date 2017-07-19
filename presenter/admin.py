@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import Slide
+from .models import Presentation, Slide, GoLive
 
-class SlideAdmin(admin.ModelAdmin):
-	list_display = ('numberofslides','currentslide')
-
-admin.site.register(Slide, SlideAdmin)
+admin.site.register(Presentation)
+admin.site.register(Slide)
+admin.site.register(GoLive)

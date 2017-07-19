@@ -1,44 +1,61 @@
-<!DOCTYPE html>
-<html>
-<title>SlideCast</title>
-<link rel="stylesheet" href="../static/presenter/css/w3.css">
-<style>
-.mySlides {display:none}
-</style>
-<body>
+{% extends 'presenter/base.html' %}
+{% block presentations_active %}active{% endblock %}
 
-<div class="w3-container w3-center">
-  <h2 >Powered by SlideCast</h2>
-  </div>
+{% block body %}
+<div class="albums-container container-fluid">
 
-<div class="w3-content" id = "imagecontainer" style="max-width:80%">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>{{ user.username }}'s Presentations</h3>
+        </div>
+
+{% if presentations %}
+        
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for presentation in presentations %}
+                                    <tr>
+                                        <td>{{ presentation.title }}</td>
+                                        
+                                        <td>
+                                           <a href="{% url 'presenter:detail' presentation.id %}" class="btn btn-primary btn-sm" role="button">View Details</a>
+                                           <form action="{% url 'presenter:delete_presentation' presentation.id %}" method="post" style="display: inline;">
+                                            {% csrf_token %}
+                                                <input type="hidden" name="presentation_id" value="{{ presentation.id }}" />
+                                                <button type="submit" class="btn btn-default btn-sm">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </form>
+                                        </td>
+                                        
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+            <div class="col-sm-12">
+                <br>
+                <a href="{% url 'presenter:create_presentation' %}">
+                    <button type="button" class="btn btn-success">
+                        <span class="glyphicon glyphicon-plus"></span>&nbsp; Add a Presentation
+                    </button>
+                </a>
+            </div>
+        
+    {% endif %}
 
 </div>
-
-<div class="w3-center">
-  <div class="w3-section" id = "nxtprev" onclick="uncheck()">
-    
-  </div>
-
-  <div>
-  <a href = "../media/SlideCast.pdf">Download</a>
-
-
-  	 <!-- <label class="switch">
-      <input id ="chkbox" type="checkbox" name = "sync" checked>Auto-sync
-    <div class="slider"></div>
-</label>	 -->
-
-  </div>
-  
-  <div id = "slide-button" ">
-    
-  </div>
-
-</div>
-
-<script type="text/javascript" src="../static/presenter/js/main.js"></script>
-  
-</body>
-</html>
-
+{% endblock %}

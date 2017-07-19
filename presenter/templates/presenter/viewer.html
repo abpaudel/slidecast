@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}SlideCast{% endblock %}</title>
+    {% load staticfiles %}
+    <link rel="shortcut icon" type="image/png" href="{%  static 'favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'presenter/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'presenter/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'presenter/css/w3.css' %}">
+        
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+
+
+        <div class="navbar-header">
+            
+            <a class="navbar-brand w3-display-topmiddle">SlideCast</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="topNavBar">
+
+        </div>
+
+    </div>
+</nav>
+
+{% if golive.current_presentation %}
+  <div class = "w3-center">
+  <div class="w3-content slideshow" id = "imagecontainer" style="max-width:80%">
+    {% for slide in golive.current_presentation.slide_set.all %}           
+           <img src="{{ slide.image_file.url }}" class="img-responsive mySlides">
+      {% endfor %}
+  </div>
+
+  <div class="w3-center w3-display-bottommiddle notss">
+    <div class="w3-section" id = "nxtprev" >
+     
+    </div>
+    <div>
+    {% if golive.current_presentation.pdf_file %}
+      <a href = "{{ golive.current_presentation.pdf_file.url }}">Download PDF</a>
+    {% endif %}
+
+     <!-- <label class="switch">
+      <input id ="chkbox" type="checkbox" name = "sync" checked>Auto-sync
+    <div class="slider"></div>
+</label>   -->
+
+  </div>
+  <div id = "slide-button">
+    {% for i in range %}           
+         <button class="w3-button demo" onclick="currentDiv({{ i }})">{{ i }}</button>  
+    {% endfor %}
+     
+  </div>
+</div>
+</div>
+
+<script type="text/javascript" src="{% static 'presenter/js/jquery-1.12.4.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'presenter/js/jquery.cookie.js' %}"></script>
+<script type="text/javascript" src="{% static 'presenter/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'presenter/js/main.js' %}"></script>
+<script type="text/javascript" src="{% static 'presenter/js/viewer.js' %}"></script>
+<script type="text/javascript">currentDiv({{ golive.current_slide }})</script>
+
+
+{% else %}
+<div class="w3-container w3-center">
+      <h3>Presentation is currently offline. Please come back after a while.</h3>
+</div>
+{% endif %}
+</body>
+
+</html>
+

@@ -1,94 +1,61 @@
 
-var imagediv = document.getElementById('imagecontainer');
-var buttondiv = document.getElementById('slide-button');
-var nxtprevdiv = document.getElementById('nxtprev');
+var AlbumsListPage = {
+	init: function() {
+		this.$container = $('.albums-container');
+		this.render();
+		this.bindEvents();
+	},
 
+	render: function() {
 
-updateslide(1);
-var x = setInterval(updateslide, 2000)
+	},
 
+	bindEvents: function() {
+		$('.btn-favorite', this.$container).on('click', function(e) {
+			e.preventDefault();
 
-function updateslide(isnew){
-	var request = new XMLHttpRequest();
-	request.open('GET', 'http://'+ window.location.host + '/present/getdata/');
-	request.onload = function getdata(){
-	var data = JSON.parse(request.responseText);
-	if(isnew==1) {renderHTML(data);}
-	showDivs(slideIndex = data.currentslide);
-	};
-	request.send();
-	
-}
+			var self = $(this);
+			var url = $(this).attr('href');
+			$.getJSON(url, function(result) {
+				if (result.success) {
+					$('.glyphicon-star', self).toggleClass('active');
+				}
+			});
 
-// function uncheck(){
-//   var chkbox= document.getElementById('chkbox');
-//   chkbox.checked = false;
-//   clearInterval(x);
-
-// }
-
-// function autosync(element){
-// 	if (element.checked) {x = setInterval(updateslide, 5000); element.checked = false;}
-// 	else { clearInterval(x); element.checked = false;}
-
-// }
-
-function renderHTML(data){
-var htmlString1 = "";
-var htmlString2 = "";
-for (i = 1; i <= data.numberofslides; i++){
-	htmlString1 += "<img class=\"mySlides\" src=\"../media/img/Slide" + i + ".JPG\"  style=\"width:100%\"/>";
-	htmlString2 += "<button class=\"w3-button demo\" onclick=\"currentDiv(" + i + ")\">" + i + "</button>";
-}
-
-imagediv.insertAdjacentHTML('beforeend', htmlString1);
-buttondiv.insertAdjacentHTML('beforeend', htmlString2);
-nxtprevdiv.insertAdjacentHTML('beforeend', "<button class=\"w3-button w3-light-grey\" onclick=\"plusDivs(-1)\">❮ Prev</button><button class=\"w3-button w3-light-grey\" onclick=\"plusDivs(1)\">Next ❯</button>");
-
+			return false;
+		});
+	}
 };
 
+var SongsListPage = {
+	init: function() {
+		this.$container = $('.songs-container');
+		this.render();
+		this.bindEvents();
+	},
 
-function plusDivs(n) {
-  showDivs(slideIndex += n);
-}
+	render: function() {
 
-function currentDiv(n) {
-  showDivs(slideIndex = n);
-}
+	},
 
-function showDivs(n) {
-  var i;
-  var x = document.getElementsByClassName("mySlides");
-  var dots = document.getElementsByClassName("demo");
-  if (n > x.length) {slideIndex = 1}    
-  if (n < 1) {slideIndex = x.length}
-  for (i = 0; i < x.length; i++) {
-     x[i].style.display = "none";  
-  }
-  for (i = 0; i < dots.length; i++) {
-     dots[i].className = dots[i].className.replace(" w3-red", "");
-  }
-  x[slideIndex-1].style.display = "block";  
-  dots[slideIndex-1].className += " w3-red";
-}
+	bindEvents: function() {
+		$('.btn-favorite', this.$container).on('click', function(e) {
+			e.preventDefault();
 
+			var self = $(this);
+			var url = $(this).attr('href');
+			$.getJSON(url, function(result) {
+				if (result.success) {
+					$('.glyphicon-star', self).toggleClass('active');
+				}
+			});
 
-document.onkeydown = function(e) {
-    e = e || window.event;
-    switch(e.which || e.keyCode) {
-        case 37: // left
-          plusDivs(-1);
-          break;
+			return false;
+		});
+	}
+};
 
-        case 38: // up
-          
-          break;
-        case 39: // right
-          plusDivs(1);
-          break;
-
-        case 40: // down
-          break;
-
-        default: return; // exit this handler for other keys
-    }}
+$(document).ready(function() {
+	AlbumsListPage.init();
+	SongsListPage.init();
+});

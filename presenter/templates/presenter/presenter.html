@@ -1,0 +1,35 @@
+
+<html>
+{% load staticfiles %}
+
+<link rel="shortcut icon" type="image/png" href="{%  static 'favicon.ico' %}">
+
+<link rel="stylesheet" href="{% static 'presenter/css/w3.css' %}">
+
+<body bgcolor="black">
+
+<div class="w3-content w3-display-middle slideshow" id = "imagecontainer" style="max-width:100%">
+	{% for slide in golive.current_presentation.slide_set.all %}           
+         <img src="{{ slide.image_file.url }}" class="img-responsive mySlides">
+    {% endfor %}
+</div>
+
+<div class="w3-center w3-display-bottommiddle notss">
+  <div class="w3-section" id = "nxtprev">
+   
+  </div>
+  <div id = "slide-button">
+  	{% for i in range %}           
+         <button class="w3-button demo" onclick="currentDiv({{ i }})">{{ i }}</button>  
+    {% endfor %}
+  	 
+  </div>
+</div>
+<script type="text/javascript" src="{% static 'presenter/js/jquery-1.12.4.min.js' %}"/></script>
+<script type="text/javascript" src="{% static 'presenter/js/jquery.cookie.js' %}"/></script>
+
+<script type="text/javascript" src="{% static 'presenter/js/presenter.js' %}"/></script>
+<script type="text/javascript">currentDiv({{ golive.current_slide }})</script>
+</body>
+</html>
+
