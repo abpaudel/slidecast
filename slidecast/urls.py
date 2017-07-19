@@ -19,10 +19,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 import presenter
 
-urlpatterns = [
+urlpatterns = [   
     url(r'^admin/', admin.site.urls),
-    url(r'^present/', include('presenter.urls')),
-    url(r'^control/', presenter.views.indexadmin, name='indexadmin'),
+    url(r'^cast/', include('presenter.urls')),
     
    
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

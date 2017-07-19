@@ -1,0 +1,78 @@
+{% extends 'presenter/base.html' %}
+{% block title %}{{ presentation }}{% endblock %}
+{% block presentations_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid songs-container">
+
+    <div class="row">
+
+        <div class="col-sm-4 col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    
+                    <h2>{{ presentation.title }}</h2>
+                    <h5>{{ presentation.description }}<h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-8 col-md-9">
+
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                {% if presentation.slide_set.all %}    
+                <li role="presentation" class="active "><a href="{% url 'presenter:golive' presentation.id %}">
+                    <span class="glyphicon glyphicon-play"></span>&nbsp; Go Live </a>
+                </li>
+                {% endif %}
+                <li role="presentation"><a href="{% url 'presenter:create_slide' presentation.id %}">Add New Slide</a></li>
+            </ul>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <h3>All Slides ({{ slidecount }}) </h3>
+
+                    {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th> File</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for slide in presentation.slide_set.all %}
+                            <tr>
+                                <td>
+                                    <img src="{{ slide.image_file.url }}" class="img-responsive" style="max-width:80%">
+                                </td>
+                            
+                                
+                                <td>
+                                    <form action="{% url 'presenter:delete_slide' presentation.id slide.id %}" method="post" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="slide_id" value="{{ slide.id }}" />
+                                        <button type="submit" class="btn btn-danger btn-xs">
+                                            <span class="glyphicon glyphicon-remove"></span>&nbsp; Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

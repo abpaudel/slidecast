@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import Slide
+from .models import GoLive
 
-class SlideSerializer(serializers.ModelSerializer):
+class GoLiveSerializer(serializers.ModelSerializer):
 
 	class Meta:
-		model = Slide
-		fields = ('numberofslides', 'currentslide')
+		model = GoLive
+		fields = ('current_slide',)
 
