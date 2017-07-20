@@ -1,10 +1,12 @@
 from django.contrib.auth import authenticate, login
-from django.contrib.auth import logout
+from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from .forms import PresentationForm, SlideForm, UserForm
 from .models import Presentation, Slide, GoLive
+from django.contrib.auth.decorators import login_required
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -13,6 +15,7 @@ from .serializers import GoLiveSerializer
 
 
 IMAGE_FILE_TYPES = ['png', 'jpg', 'jpeg']
+LOGIN_URL = '/cast/login/'
   
     
 class SlideData(APIView):
@@ -28,8 +31,9 @@ class SlideData(APIView):
         slide.save()
         serializer = GoLiveSerializer(slide, many = False)
         return Response(serializer.data)
-        
+  
 
+@login_required(login_url=LOGIN_URL)
 def create_presentation(request):
     if not request.user.is_authenticated():
         return render(request, 'presenter/login.html')
@@ -46,6 +50,7 @@ def create_presentation(request):
         return render(request, 'presenter/create_presentation.html', context)
 
 
+@login_required(login_url=LOGIN_URL)
 def create_slide(request, presentation_id):
     form = SlideForm(request.POST or None, request.FILES or None)
     presentation = get_object_or_404(Presentation, pk=presentation_id)
@@ -73,6 +78,7 @@ def create_slide(request, presentation_id):
     return render(request, 'presenter/create_slide.html', context)
 
 
+@login_required(login_url=LOGIN_URL)
 def delete_presentation(request, presentation_id):
     presentation = Presentation.objects.get(pk=presentation_id)
     presentation.delete()
@@ -80,6 +86,7 @@ def delete_presentation(request, presentation_id):
     return render(request, 'presenter/index.html', {'presentations': presentations})
 
 
+@login_required(login_url=LOGIN_URL)
 def delete_slide(request, presentation_id, slide_id):
     presentation = get_object_or_404(Presentation, pk=presentation_id)
     slide = Slide.objects.get(pk=slide_id)
@@ -87,6 +94,7 @@ def delete_slide(request, presentation_id, slide_id):
     return render(request, 'presenter/detail.html', {'presentation': presentation})
 
 
+@login_required(login_url=LOGIN_URL)
 def detail(request, presentation_id):
     if not request.user.is_authenticated():
         return render(request, 'presenter/login.html')
@@ -95,6 +103,8 @@ def detail(request, presentation_id):
         presentation = get_object_or_404(Presentation, pk=presentation_id)
         return render(request, 'presenter/detail.html', {'presentation': presentation, 'user': user, 'slidecount': presentation.slide_set.count()})
 
+
+@login_required(login_url=LOGIN_URL)
 def golive(request, presentation_id):
     presentation = get_object_or_404(Presentation, pk=presentation_id)
     golive = get_object_or_404(GoLive)
@@ -103,46 +113,49 @@ def golive(request, presentation_id):
     golive.save()
     return render(request, 'presenter/presenter.html', {'golive': golive, 'range': range(1, golive.current_presentation.slide_set.count()+1)})
 
+
 def golive_viewer(request):
     golive = get_object_or_404(GoLive)
     return render(request, 'presenter/viewer.html', {'golive': golive, 'range': range(1, golive.current_presentation.slide_set.count()+1)})
 
+
+@login_required(login_url=LOGIN_URL)
 def onair(request):
     onair = get_object_or_404(GoLive)
     return render(request, 'presenter/onair.html', {'onair': onair})
 
+
+@login_required(login_url=LOGIN_URL)
 def stoplive(request, onair):
     onair.current_presentation = None
     return render(request, 'presenter/onair.html', {'onair': onair})
 
 
-
+@login_required(login_url=LOGIN_URL)
 def index(request):
-    if not request.user.is_authenticated():
-        return render(request, 'presenter/login.html')
+    presentations = Presentation.objects.filter(user=request.user)
+    slide_results = Slide.objects.all()
+    query = request.GET.get("q")
+    if query:
+        presentations = presentations.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query)
+        ).distinct()
+        return render(request, 'presenter/index.html', {
+            'presentations': presentations,
+        })
     else:
-        presentations = Presentation.objects.filter(user=request.user)
-        slide_results = Slide.objects.all()
-        query = request.GET.get("q")
-        if query:
-            presentations = presentations.filter(
-                Q(title__icontains=query) |
-                Q(description__icontains=query)
-            ).distinct()
-            return render(request, 'presenter/index.html', {
-                'presentations': presentations,
-            })
-        else:
-            return render(request, 'presenter/index.html', {'presentations': presentations})
+        return render(request, 'presenter/index.html', {'presentations': presentations})
 
 
 def logout(request):
-    logout(request)
+    auth_logout(request)
     form = UserForm(request.POST or None)
     context = {
         "form": form,
     }
     return render(request, 'presenter/login.html', context)
+
 
 
 def login(request):
@@ -152,7 +165,7 @@ def login(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
-                login(request, user)
+                auth_login(request, user)
                 presentations = Presentation.objects.filter(user=request.user)
                 return render(request, 'presenter/index.html', {'presentations': presentations})
             else:
