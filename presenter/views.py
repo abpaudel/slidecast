@@ -107,6 +107,14 @@ def golive_viewer(request):
     golive = get_object_or_404(GoLive)
     return render(request, 'presenter/viewer.html', {'golive': golive, 'range': range(1, golive.current_presentation.slide_set.count()+1)})
 
+def onair(request):
+    onair = get_object_or_404(GoLive)
+    return render(request, 'presenter/onair.html', {'onair': onair})
+
+def stoplive(request, onair):
+    onair.current_presentation = None
+    return render(request, 'presenter/onair.html', {'onair': onair})
+
 
 
 def index(request):
