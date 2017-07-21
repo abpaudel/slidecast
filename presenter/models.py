@@ -18,10 +18,6 @@ class Slide(models.Model):
     image_file = models.ImageField()
     order = models.IntegerField(default = 0)
 
-
-    def __str__(self):
-        return self.image_file.name
-
 class GoLive(models.Model):
 	current_presentation = models.ForeignKey(Presentation, blank = True, null = True)
 	current_slide = models.IntegerField(default = 1)

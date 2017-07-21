@@ -16,7 +16,6 @@ class SlideForm(forms.ModelForm):
     class Meta:
         model = Slide
         fields = ['image_file']
-    
 
 
 class UserForm(forms.ModelForm):

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 django>=1.10.7
 djangorestframework>=3.6.3
 pillow>=4.2.1

@@ -99,6 +99,7 @@ def detail(request, presentation_id):
     return render(request, 'presenter/detail.html', {'presentation': presentation, 'slidecount': presentation.slide_set.count()})
 
 
+
 @login_required(login_url=LOGIN_URL)
 def golive(request, presentation_id):
     presentation = get_object_or_404(Presentation, pk=presentation_id)
