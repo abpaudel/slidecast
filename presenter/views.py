@@ -35,7 +35,6 @@ class SlideData(APIView):
 
 @login_required(login_url=LOGIN_URL)
 def create_presentation(request):
-
     form = PresentationForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         presentation = form.save(commit=False)
@@ -94,38 +93,57 @@ def delete_slide(request, presentation_id, slide_id):
 @login_required(login_url=LOGIN_URL)
 def detail(request, presentation_id):
     presentation = get_object_or_404(Presentation, pk=presentation_id)
-    return render(request, 'presenter/detail.html', {'presentation': presentation, 'slidecount': presentation.slide_set.count()})
+    context = {
+        'presentation': presentation,
+        'slidecount': presentation.slide_set.count()
+    }
+    return render(request, 'presenter/detail.html', context)
 
 
 
 @login_required(login_url=LOGIN_URL)
-def golive(request, presentation_id):
+def golive(request, presentation_id, current_slide=1):
     presentation = get_object_or_404(Presentation, pk=presentation_id)
     try:
         golive = GoLive.objects.get()
     except GoLive.DoesNotExist:
         golive = GoLive()
     golive.current_presentation = presentation
-    golive.current_slide = 1
+    golive.current_slide = current_slide
     golive.save()
-    return render(request, 'presenter/presenter.html', {'golive': golive, 'range': range(1, golive.current_presentation.slide_set.count()+1)})
+    rng = range(1, golive.current_presentation.slide_set.count()+1)
+    return render(request, 'presenter/presenter.html', {'golive': golive, 'range': rng})
             
 
 def golive_viewer(request):
     golive = get_object_or_404(GoLive)
-    return render(request, 'presenter/viewer.html', {'golive': golive, 'range': range(1, golive.current_presentation.slide_set.count()+1)})
+    try:
+        rng = range(1, golive.current_presentation.slide_set.count()+1)
+        context = {
+            'golive': golive,
+            'range': rng
+        }
+    except AttributeError:
+        context = {'golive': golive }
+    return render(request, 'presenter/viewer.html', context)
 
 
 @login_required(login_url=LOGIN_URL)
 def onair(request):
-    onair = get_object_or_404(GoLive)
+    try:
+        onair = GoLive.objects.get()
+    except GoLive.DoesNotExist:
+        onair = GoLive()
+        onair.save()
     return render(request, 'presenter/onair.html', {'onair': onair})
 
 
 @login_required(login_url=LOGIN_URL)
-def stoplive(request, onair):
+def stoplive(request):
+    onair = get_object_or_404(GoLive)
     onair.current_presentation = None
-    return render(request, 'presenter/onair.html', {'onair': onair})
+    onair.save()
+    return render(request, 'presenter/onair.html', {'presentation': onair.current_presentation})
 
 
 @login_required(login_url=LOGIN_URL)
