@@ -35,19 +35,17 @@ class SlideData(APIView):
 
 @login_required(login_url=LOGIN_URL)
 def create_presentation(request):
-    if not request.user.is_authenticated():
-        return render(request, 'presenter/login.html')
-    else:
-        form = PresentationForm(request.POST or None, request.FILES or None)
-        if form.is_valid():
-            presentation = form.save(commit=False)
-            presentation.user = request.user
-            presentation.save()
-            return render(request, 'presenter/detail.html', {'presentation': presentation})
-        context = {
-            "form": form,
-        }
-        return render(request, 'presenter/create_presentation.html', context)
+
+    form = PresentationForm(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        presentation = form.save(commit=False)
+        presentation.user = request.user
+        presentation.save()
+        return render(request, 'presenter/detail.html', {'presentation': presentation})
+    context = {
+        "form": form,
+    }
+    return render(request, 'presenter/create_presentation.html', context)
 
 
 @login_required(login_url=LOGIN_URL)
@@ -103,12 +101,15 @@ def detail(request, presentation_id):
 @login_required(login_url=LOGIN_URL)
 def golive(request, presentation_id):
     presentation = get_object_or_404(Presentation, pk=presentation_id)
-    golive = get_object_or_404(GoLive)
+    try:
+        golive = GoLive.objects.get()
+    except GoLive.DoesNotExist:
+        golive = GoLive()
     golive.current_presentation = presentation
     golive.current_slide = 1
     golive.save()
     return render(request, 'presenter/presenter.html', {'golive': golive, 'range': range(1, golive.current_presentation.slide_set.count()+1)})
-
+            
 
 def golive_viewer(request):
     golive = get_object_or_404(GoLive)
