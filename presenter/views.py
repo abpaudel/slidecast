@@ -55,26 +55,25 @@ def create_slide(request, presentation_id):
     form = SlideForm(request.POST or None, request.FILES or None)
     presentation = get_object_or_404(Presentation, pk=presentation_id)
     if form.is_valid():
-        presentation_slides = presentation.slide_set.all()
-        slide = form.save(commit=False)
-        slide.presentation = presentation
-        slide.image_file = request.FILES['image_file']
-        file_type = slide.image_file.url.split('.')[-1]
-        file_type = file_type.lower()
-        if file_type not in IMAGE_FILE_TYPES:
-            context = {
-                'presentation': presentation,
-                'form': form,
-                'error_message': 'Image file must be PNG, JPG or JPEG',
-            }
-            return render(request, 'presenter/create_slide.html', context)
-
-        slide.save()
+        files = request.FILES.getlist('image_file')
+        for file in files:
+            file_type = file.name.split('.')[-1]
+            file_type = file_type.lower()
+            if file_type in IMAGE_FILE_TYPES:
+                slide = Slide()
+                slide.image_file = file
+                slide.presentation = presentation
+                slide.save()
+        context = {
+            'presentation': presentation,
+            'form': form,
+       }
         return render(request, 'presenter/detail.html', {'presentation': presentation})
-    context = {
-        'presentation': presentation,
-        'form': form,
-    }
+    else:
+        context = {
+            'presentation': presentation,
+            'form': form,
+        }
     return render(request, 'presenter/create_slide.html', context)
 
 
@@ -96,12 +95,8 @@ def delete_slide(request, presentation_id, slide_id):
 
 @login_required(login_url=LOGIN_URL)
 def detail(request, presentation_id):
-    if not request.user.is_authenticated():
-        return render(request, 'presenter/login.html')
-    else:
-        user = request.user
-        presentation = get_object_or_404(Presentation, pk=presentation_id)
-        return render(request, 'presenter/detail.html', {'presentation': presentation, 'user': user, 'slidecount': presentation.slide_set.count()})
+    presentation = get_object_or_404(Presentation, pk=presentation_id)
+    return render(request, 'presenter/detail.html', {'presentation': presentation, 'slidecount': presentation.slide_set.count()})
 
 
 @login_required(login_url=LOGIN_URL)

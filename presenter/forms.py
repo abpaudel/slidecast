@@ -11,10 +11,12 @@ class PresentationForm(forms.ModelForm):
 
 
 class SlideForm(forms.ModelForm):
+    image_file = forms.ImageField(widget=forms.FileInput(attrs={'multiple':'true'}))
 
     class Meta:
         model = Slide
-        fields = ['image_file', 'order']
+        fields = ['image_file']
+    
 
 
 class UserForm(forms.ModelForm):
