@@ -15,11 +15,7 @@ urlpatterns = [
     url(r'^(?P<presentation_id>[0-9]+)/$', views.detail, name='detail'),
     url(r'^create_presentation/$', views.create_presentation, name='create_presentation'),
     url(r'^(?P<presentation_id>[0-9]+)/create_slide/$', views.create_slide, name='create_slide'),
-<<<<<<< HEAD
     url(r'^(?P<presentation_id>[0-9]+)/delete_slide/(?P<slide_id>[0-9]+)/$', views.delete_slide, name='delete_slide'),
-=======
-    url(r'^(?P<presentation_id>[0-9]+)/delete_slide/(?P<song_id>[0-9]+)/$', views.delete_slide, name='delete_slide'),
->>>>>>> 7e8a7ded2497c42ce53ef9f7c4404967ebd98854
     url(r'^(?P<presentation_id>[0-9]+)/delete_presentation/$', views.delete_presentation, name='delete_presentation'),
     url(r'^(?P<presentation_id>[0-9]+)/golive/$', views.golive, name='golive'),
 
