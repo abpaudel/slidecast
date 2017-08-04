@@ -10008,7 +10008,7 @@ exports.ViewHistory = ViewHistory;
 "use strict";
 
 
-var DEFAULT_URL = '';
+var DEFAULT_URL = '/media/SlideCast.pdf';
 ;
 var pdfjsWebApp = void 0;
 {
@@ -10147,3 +10147,17 @@ if (document.readyState === 'interactive' || document.readyState === 'complete')
 /***/ })
 /******/ ]);
 //# sourceMappingURL=viewer.js.map
+
+
+document.addEventListener('pagechange', function(e) {
+  if (e.pageNumber !== e.previousPageNumber) {
+    console.log('page changed from ' + e.previousPageNumber + ' to ' + e.pageNumber);
+    var csrftoken = $.cookie('csrftoken');
+    var request = new XMLHttpRequest();
+    request.open('POST', 'http://'+ window.location.host + '/cast/getdata/');
+    request.setRequestHeader("Content-Type", "application/json");
+    request.setRequestHeader("X-CSRFToken", csrftoken);
+    var str = {"current_slide": e.pageNumber };
+    request.send(JSON.stringify(str));
+  }
+});
