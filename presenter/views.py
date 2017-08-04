@@ -208,3 +208,6 @@ def register(request):
         "form": form,
     }
     return render(request, 'presenter/register.html', context)
+
+def pdfjs(request):
+    return render(request, 'presenter/pdfjs/viewer.html')
