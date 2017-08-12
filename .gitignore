@@ -1,5 +1,6 @@
 media/
 db.sqlite3
-slidecast/__pycache__/
-presenter/__pycache__/
-presenter/migrations/
+*.pyc
+*.pdf
+*/migrations/
+*/__pycache__/
