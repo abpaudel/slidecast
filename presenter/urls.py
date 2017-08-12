@@ -18,5 +18,7 @@ urlpatterns = [
     url(r'^(?P<presentation_id>[0-9]+)/delete_slide/(?P<slide_id>[0-9]+)/$', views.delete_slide, name='delete_slide'),
     url(r'^(?P<presentation_id>[0-9]+)/delete_presentation/$', views.delete_presentation, name='delete_presentation'),
     url(r'^(?P<presentation_id>[0-9]+)/golive/$', views.golive, name='golive'),
-    url(r'^pdf/$', views.pdfjs, name='pdfjs'),
+    url(r'^pdf/present$', views.pdfjs_present, name='pdfjs_present'),
+    # url(r'^view$', views.pdfjs_view, name='pdfjs_view'),
 ]
+

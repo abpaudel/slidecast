@@ -26,9 +26,9 @@
                                         <td>{{ onair.current_presentation.title }}</td>
                                         
                                         <td>
-                                           <a href="{% url 'presenter:detail' onair.current_presentation.id %}" class="btn btn-primary btn-sm" role="button">View Details</a>
+                                           <!-- <a href="{% url 'presenter:detail' onair.current_presentation.id %}" class="btn btn-primary btn-sm" role="button">View Details</a> -->
                                            <a href="{% url 'presenter:golive' onair.current_presentation.id %}" class="btn btn-primary btn-sm" role="button">Presenter's View</a>
-                                           <a href="{% url 'presenter:golive_viewer' %}" class="btn btn-primary btn-sm" role="button">Audience's View</a>
+                                           <a href="{% url 'view' %}" class="btn btn-primary btn-sm" role="button">Audience's View</a>
                                            <form action="{% url 'presenter:stoplive' %}" method="post" style="display: inline;">
                                             {% csrf_token %}
                                                 <button type="submit" class="btn btn-danger btn-sm">

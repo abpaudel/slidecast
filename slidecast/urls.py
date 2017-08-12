@@ -18,10 +18,14 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 import presenter
+from presenter.views import pdfjs_view
 
-urlpatterns = [   
+
+urlpatterns = [
+	url(r'^$', pdfjs_view, name='view'),
     url(r'^admin/', admin.site.urls),
-    url(r'^cast/', include('presenter.urls')),
+    url(r'^cast/', include('presenter.urls'),),
+
     
    
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

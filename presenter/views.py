@@ -44,7 +44,7 @@ def create_presentation(request):
     context = {
         "form": form,
     }
-    return render(request, 'presenter/create_presentation.html', context)
+    return render(request, 'presenter/index.html', context)
 
 
 @login_required(login_url=LOGIN_URL)
@@ -112,7 +112,7 @@ def golive(request, presentation_id, current_slide=1):
     golive.current_slide = current_slide
     golive.save()
     rng = range(1, golive.current_presentation.slide_set.count()+1)
-    return render(request, 'presenter/presenter.html', {'golive': golive, 'range': rng})
+    return render(request, 'presenter/pdfjs/presenter.html', {'golive': golive, 'range': rng})
             
 
 def golive_viewer(request):
@@ -209,5 +209,11 @@ def register(request):
     }
     return render(request, 'presenter/register.html', context)
 
-def pdfjs(request):
-    return render(request, 'presenter/pdfjs/viewer.html')
+def pdfjs_present(request, presentation_id):
+    presentation = get_object_or_404(Presentation, pk=presentation_id)
+    return render(request, 'presenter/pdfjs/presenter.html', {presentation: presentation})
+
+def pdfjs_view(request):
+    golive = get_object_or_404(GoLive)
+    context = {'golive': golive }
+    return render(request, 'presenter/pdfjs/viewer.html', context)
