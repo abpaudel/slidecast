@@ -40,11 +40,11 @@ def create_presentation(request):
         presentation = form.save(commit=False)
         presentation.user = request.user
         presentation.save()
-        return render(request, 'presenter/detail.html', {'presentation': presentation})
+        return render(request, 'presenter/index.html', {'presentation': presentation})
     context = {
         "form": form,
     }
-    return render(request, 'presenter/index.html', context)
+    return render(request, 'presenter/create_presentation.html', context)
 
 
 @login_required(login_url=LOGIN_URL)
@@ -148,7 +148,7 @@ def stoplive(request):
 
 @login_required(login_url=LOGIN_URL)
 def index(request):
-    presentations = Presentation.objects.filter(user=request.user)
+    presentations = Presentation.objects.filter(user=request.user).order_by('-pk')
     slide_results = Slide.objects.all()
     query = request.GET.get("q")
     if query:
