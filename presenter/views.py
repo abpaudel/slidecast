@@ -40,7 +40,8 @@ def create_presentation(request):
         presentation = form.save(commit=False)
         presentation.user = request.user
         presentation.save()
-        return render(request, 'presenter/index.html', {'presentation': presentation})
+        presentations = Presentation.objects.filter(user=request.user).order_by('-pk')
+        return render(request, 'presenter/index.html', {'presentations': presentations})
     context = {
         "form": form,
     }
@@ -78,7 +79,7 @@ def create_slide(request, presentation_id):
 def delete_presentation(request, presentation_id):
     presentation = Presentation.objects.get(pk=presentation_id)
     presentation.delete()
-    presentations = Presentation.objects.filter(user=request.user)
+    presentations = Presentation.objects.filter(user=request.user).order_by('-pk')
     return render(request, 'presenter/index.html', {'presentations': presentations})
 
 
